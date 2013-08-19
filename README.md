@@ -1,4 +1,3 @@
-
 Módulo desenvolvido pela Lema21 para integrar com o sistema do Bling e gerar notas fiscais.
 
 Para o funcionamento do módulo é preciso criar os seguintes atributos de produto na munheca (sim, nao está automatizado a criacao dos atributos)
@@ -15,3 +14,5 @@ Melhorias no módulo:
 - validação para produtos que não possuem os atributos requeridos
 - alteração das mensagens de sucesso e erro para exibir o número de incrementId do objeto order;
 - inclusão automática dos atributos de nfe no grupo default do magento como não obrigatórios
+- Retirado validações desnecessárias.
+- Alteração na nomenclatura dos rótulos da guia Nf-e em produtos.
