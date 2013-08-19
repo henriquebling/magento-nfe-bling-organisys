@@ -154,9 +154,9 @@ class Lema21_Nfe_Model_TransformToXML
 		foreach ($this->_orderModel->getItemsCollection() as $itemId => $item) {
 
 			$_product = Mage::getModel('catalog/product')->load( $item->product_id );
-			if(!$this->checkProductAttributesRequired($_product)){
+/*			if(!$this->checkProductAttributesRequired($_product)){
 				throw new Exception("O produto no pedido ".$this->_orderModel->getIncrementId().", selecionado para emissão de Nf-e não possui os atributos requeridos");				
-			}
+			}*/
 			if ( $_product->getResource()->getAttribute( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM )->getFrontend()->getValue( $_product )){
 				$res = $_product->getResource()->getAttribute( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM )->getFrontend()->getValue( $_product );
 			}
