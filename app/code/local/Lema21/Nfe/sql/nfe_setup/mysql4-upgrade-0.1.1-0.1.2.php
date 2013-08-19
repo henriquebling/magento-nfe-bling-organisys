@@ -5,14 +5,15 @@ $installer->startSetup();
 
 $setup->addAttributeGroup('catalog_product', 'Default', 'Nf-e', 1000);
 
-$options['value']['option1'][0] = 'PÇ';
+$options['value']['option1'][0] = 'PC';
 $options['value']['option2'][0] = 'KG';
+$options['value']['option3'][0] = 'UN';
 $setup->addAttribute(
     'catalog_product',
     'operation_unit',
 array(
   'group'         => 'Nf-e',
-  'label'                   => 'Nf-e Unidade / operation_unit',
+  'label'                   => 'Unidade',
   'type'                       => 'varchar',
   'input'                     => 'select',
   'backend'                   => 'eav/entity_attribute_backend_array',
@@ -41,7 +42,7 @@ $setup->addAttribute('catalog_product', 'operation_name', array(
     'group'         => 'Nf-e',
     'input'         => 'text',
     'type'          => 'text',
-    'label'         => 'Nf-e Descrição / operation_name',
+    'label'         => 'Descricao',
     'backend'       => '',
     'visible'       => 1,
     'required'      => 0,
@@ -60,7 +61,7 @@ $setup->addAttribute('catalog_product', 'codigo_ncm', array(
     'group'         => 'Nf-e',
     'input'         => 'text',
     'type'          => 'text',
-    'label'         => 'Nf-e Classificação fiscal / codigo_ncm',
+    'label'         => 'NCM',
     'backend'       => '',
     'visible'       => 1,
     'required'      => 0,
@@ -79,7 +80,7 @@ $setup->addAttribute('catalog_product', 'codigo_origem', array(
     'group'         => 'Nf-e',
     'input'         => 'text',
     'type'          => 'text',
-    'label'         => 'Nf-e Código Origem / codigo_origem',
+    'label'         => 'Origem',
     'backend'       => '',
     'visible'       => 1,
     'required'      => 0,
