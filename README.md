@@ -16,3 +16,4 @@ Melhorias no módulo:
 - inclusão automática dos atributos de nfe no grupo default do magento como não obrigatórios
 - Retirado validações desnecessárias.
 - Alteração na nomenclatura dos rótulos da guia Nf-e em produtos.
+- Adicionado tipo de integração e numero pedido loja.
