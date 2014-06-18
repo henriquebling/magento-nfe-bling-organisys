@@ -14,13 +14,6 @@ class Lema21_Nfe_Model_TransformToXML
 	const ATTR_CODIGO_ORIGEM    = 'codigo_origem';
 	const ATTR_CODIGO_NCM       = 'codigo_ncm';
 	
-	
-
-	// Valores para código de origem
-	// 0 = nacional
-	// 1 = Estrangeira - Importação direta
-	// 2 = Estrangeira - Adquirida no mercado interno
-
 	/**
 	 * Construction function
 	 * Load order and path to write XML
@@ -39,8 +32,6 @@ class Lema21_Nfe_Model_TransformToXML
 		$this->_path = $path;
 	}
 
-
-
 	/**
 	 * Write xml nfe in folder
 	 *
@@ -48,19 +39,13 @@ class Lema21_Nfe_Model_TransformToXML
 	 */
 	public function write()
 	{
-
 		// load template array, fill data and convert to XML
-		$this->_init()->_addCustomer()
-		->_addItens()->_addOtherInfo()->_toXML();
-
+		$this->_init()->_addCustomer()->_addItens()->_addOtherInfo()->_toXML();
 		$io = new Varien_Io_File();
 		$io->setAllowCreateFolders(true);
 		$io->createDestinationDir($this->_path);
 
-		$return = $io->write(
-		$this->_path . $this->_getFileName(),
-		$this->_stringFinalXML
-		);
+		$return = $io->write($this->_path . $this->_getFileName(), $this->_stringFinalXML);
 
 		return true;
 	}
@@ -76,8 +61,6 @@ class Lema21_Nfe_Model_TransformToXML
 		return $io->read($this->_path . $this->_getFileName());
 	}
 
-
-
 	private function _init()
 	{
 		$this->_xml = $this->_template();
@@ -86,7 +69,6 @@ class Lema21_Nfe_Model_TransformToXML
 
 	private function _toXML()
 	{
-
 		$xml = Lema21_Nfe_Model_Lib_Array2XML::createXML('pedido', $this->_xml);
 		$this->_stringFinalXML = $xml->saveXML();
 
@@ -95,51 +77,37 @@ class Lema21_Nfe_Model_TransformToXML
 
 	private function _addCustomer()
 	{
-
 		// nome
-		$this->_xml["cliente"]["nome"] = $this->_orderModel
-		->getCustomerFirstname() . " " . $this->_orderModel
-		->getCustomerLastname();
-
-		$this->_xml["cliente"]["email"] = $this->_orderModel
-		->getCustomerEmail();
+		$this->_xml["cliente"]["nome"] = trim($this->_orderModel->getCustomerFirstname()) . " " . trim($this->_orderModel->getCustomerLastname());
+		$this->_xml["cliente"]["email"] = $this->_orderModel->getCustomerEmail();
 		// cpf
-		$this->_xml["cliente"]["cpf_cnpj"] = $this->_orderModel
-		->getCustomerTaxvat();
+		$this->_xml["cliente"]["cpf_cnpj"] = $this->_orderModel->getCustomerTaxvat();
 
 		$billingAddress = $this->_orderModel->getBillingAddress();
 
 		// endereco - cep
-		$this->_xml["cliente"]["cep"] = $billingAddress
-		->getPostcode();
+		$this->_xml["cliente"]["cep"] = $billingAddress->getPostcode();
 
 		// endereco - cidade
-		$this->_xml["cliente"]["cidade"] = $billingAddress
-		->getCity();
+		$this->_xml["cliente"]["cidade"] = $billingAddress->getCity();
 
 		// endereco - uf
-		$this->_xml["cliente"]["uf"] = $billingAddress
-		->getRegion();
+		$this->_xml["cliente"]["uf"] = $billingAddress->getRegion();
 
 		// endereco - telefone
-		$this->_xml["cliente"]["fone"] = $billingAddress
-		->getTelephone();
+		$this->_xml["cliente"]["fone"] = $billingAddress->getTelephone();
 
 		// endereco - rua
-		$this->_xml["cliente"]["endereco"] = $billingAddress
-		->getStreet(1);
+		$this->_xml["cliente"]["endereco"] = $billingAddress->getStreet(1);
+
+		// endereco - numero
+		$this->_xml["cliente"]["numero"] = $billingAddress->getStreet(2);
 
 		// endereco - bairro
-		$this->_xml["cliente"]["numero"] = $billingAddress
-		->getStreet(2);
+		$this->_xml["cliente"]["bairro"] = $billingAddress->getStreet(3);
 
 		// endereco - bairro
-		$this->_xml["cliente"]["bairro"] = $billingAddress
-		->getStreet(3);
-
-		// endereco - bairro
-		$this->_xml["cliente"]["complemento"] = $billingAddress
-		->getStreet(4);
+		$this->_xml["cliente"]["complemento"] = $billingAddress->getStreet(4);
 
 		return $this;
 	}
@@ -154,29 +122,26 @@ class Lema21_Nfe_Model_TransformToXML
 		foreach ($this->_orderModel->getItemsCollection() as $itemId => $item) {
 
 			$_product = Mage::getModel('catalog/product')->load( $item->product_id );
-			if(!$this->checkProductAttributesRequired($_product)){
+                        /*if(!$this->checkProductAttributesRequired($_product)){
 				throw new Exception("O produto no pedido ".$this->_orderModel->getIncrementId().", selecionado para emissão de Nf-e não possui os atributos requeridos");				
-			}
+			}*/
 			if ( $_product->getResource()->getAttribute( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM )->getFrontend()->getValue( $_product )){
 				$res = $_product->getResource()->getAttribute( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM )->getFrontend()->getValue( $_product );
 			}
-
-			Mage::log(" origem > " .
-			$_product->getResource()->getAttribute( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM )->getFrontend()->getValue( $_product )
-			);
-			Mage::log(" origem 2 > " . $_product->getData( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM ));
-			$this->_xml["itens"]["item"][$cont] = array(
-                "codigo" => $item->getSku(),
-                "descricao" => $_product->getData(Lema21_Nfe_Model_TransformToXML::ATTR_OPERATION_NAME),
-                "un"    => $_product->getData(Lema21_Nfe_Model_TransformToXML::ATTR_OPERATION_UNIT),
-                "qtde"  => $item->getData("qty_ordered"),
-                "vlr_unit" => $item->getPrice(),
-                "tipo" => self::PRODUCT_OR_SERVICE,
-                "peso_bruto" => $item->getWeight(),
-                "peso_liq"  => $item->getWeight(),
-                "class_fiscal" => $_product->getData(Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_NCM),
-                "origem"    => $_product->getData( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM )
-			);
+			
+			$this->_xml["itens"]["item"][$cont] = 
+				array(
+					"codigo" => $item->getSku(),
+					"descricao" => $_product->getData(Lema21_Nfe_Model_TransformToXML::ATTR_OPERATION_NAME),
+					"un"    => $_product->getData(Lema21_Nfe_Model_TransformToXML::ATTR_OPERATION_UNIT),
+					"qtde"  => $item->getData("qty_ordered"),
+					"vlr_unit" => $item->getPrice(),
+					"tipo" => self::PRODUCT_OR_SERVICE,
+					"peso_bruto" => $item->getWeight(),
+					"peso_liq"  => $item->getWeight(),
+					"class_fiscal" => $_product->getData(Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_NCM),
+					"origem"    => $_product->getData( Lema21_Nfe_Model_TransformToXML::ATTR_CODIGO_ORIGEM )
+				);
 
 			$cont++;
 		}
@@ -186,12 +151,12 @@ class Lema21_Nfe_Model_TransformToXML
 
 	private function _addOtherInfo()
 	{
-
 		$this->_xml["vlr_frete"]     = $this->_orderModel->getShippingAmount();;
 		$this->_xml["vlr_seguro"]    = self::SECURITY_AMOUNT;
 		$this->_xml["vlr_desconto"]  = self::DISCOUNT_DEFAULT;
-		$this->_xml["obs"]           = "PEDIDO " . $this->_orderModel
-		->getData("increment_id");
+		$this->_xml["tipo_integracao"]  = "api";
+		$this->_xml["numero_loja"]  = $this->_orderModel->getData("increment_id");
+		$this->_xml["obs"]           = "Nº Pedido Loja: " . $this->_orderModel->getData("increment_id");
 
 		return $this;
 	}
@@ -200,31 +165,35 @@ class Lema21_Nfe_Model_TransformToXML
 	{
 		return $this->_orderModel->getId() . ".xml";
 	}
+	
 	private function _template()
 	{
-		$template = array(
-            "cliente" => array(
-                "nome"        => null,
-                "tipoPessoa"  => "F",
-                "email"       => null,
-                "cpf_cnpj"    => null,
-                "ie_rg"       => "",
-                "endereco"    => null,
-                "numero"      => null,
-                "complemento" => null,
-                "bairro"      => null,
-                "cep"         => null,
-                "cidade"      => null,
-                "uf"          => null,
-                "fone"        => null                  
-		),
-            "vlr_frete"       => null,
-            "vlr_seguro"      => null,
-            "vlr_despesas"    => null,
-            "vlr_desconto"    => null,
-            "obs"             => null,
-            "obs_internas"    => null
-		);
+		$template = 
+			array(
+			    "cliente" => 
+				    array(
+					"nome"        => null,
+					"tipoPessoa"  => "F",
+					"email"       => null,
+					"cpf_cnpj"    => null,
+					"ie_rg"       => "",
+					"endereco"    => null,
+					"numero"      => null,
+					"complemento" => null,
+					"bairro"      => null,
+					"cep"         => null,
+					"cidade"      => null,
+					"uf"          => null,
+					"fone"        => null                  
+				     ),
+			    "vlr_frete"       => null,
+			    "vlr_seguro"      => null,
+			    "vlr_despesas"    => null,
+			    "vlr_desconto"    => null,
+			    "numero_loja"    => null,
+			    "obs"             => null,
+			    "obs_internas"    => null
+			);
 
 		return $template;
 	}
