@@ -2,10 +2,16 @@ Módulo desenvolvido pela Lema21 para integrar com o sistema do Bling e gerar no
 
 Para o funcionamento do módulo é preciso criar os seguintes atributos de produto na munheca (sim, nao está automatizado a criacao dos atributos)
 
+<b>Campos Obrigatórios</b>
+
 - codigo_origem (codigo de origem do produto)
 - opertion_name (espécie de 'nome operacional' do produto)
 - operation_unit - unidade de medida, se é "PÇ", "KG"
 - codigo_ncm - Código NCM do produto
+
+<b>Outros Campos</b>
+- gtin
+- gtin_embalagem
 
 Melhorias no módulo:
 
@@ -17,3 +23,5 @@ Melhorias no módulo:
 - Retirado validações desnecessárias.
 - Alteração na nomenclatura dos rótulos da guia Nf-e em produtos.
 - Adicionado tipo de integração e numero pedido loja.
+- Adicionado código gtin e gtin embalagem.
+
