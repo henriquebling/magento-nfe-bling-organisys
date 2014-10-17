@@ -151,12 +151,14 @@ class Lema21_Nfe_Model_TransformToXML
 
 	private function _addOtherInfo()
 	{
-		$this->_xml["vlr_frete"]     = $this->_orderModel->getShippingAmount();;
-		$this->_xml["vlr_seguro"]    = self::SECURITY_AMOUNT;
-		$this->_xml["vlr_desconto"]  = self::DISCOUNT_DEFAULT;
-		$this->_xml["tipo_integracao"]  = "api";
-		$this->_xml["numero_loja"]  = $this->_orderModel->getData("increment_id");
-		$this->_xml["obs"]           = "Nº Pedido Loja: " . $this->_orderModel->getData("increment_id");
+		$this->_xml["transporte"]["transportadora"]	= trim($this->_orderModel->getShippingDescription());
+		$this->_xml["transporte"]["servico_correios"]   = trim($this->_orderModel->getShippingDescription());
+		$this->_xml["vlr_frete"]     			= $this->_orderModel->getShippingAmount();;
+		$this->_xml["vlr_seguro"]    			= self::SECURITY_AMOUNT;
+		$this->_xml["vlr_desconto"]  			= self::DISCOUNT_DEFAULT;
+		$this->_xml["tipo_integracao"]  		= "api";
+		$this->_xml["numero_loja"]  			= $this->_orderModel->getData("increment_id");
+		$this->_xml["obs"]           			= "Nº Pedido Loja: " . $this->_orderModel->getData("increment_id");
 
 		return $this;
 	}
@@ -192,7 +194,12 @@ class Lema21_Nfe_Model_TransformToXML
 			    "vlr_desconto"    => null,
 			    "numero_loja"    => null,
 			    "obs"             => null,
-			    "obs_internas"    => null
+			    "obs_internas"    => null,
+			    "transporte" =>
+			    	array(
+            				"transportadora" => null,
+            				"servico_correios" => null
+        			)
 			);
 
 		return $template;
