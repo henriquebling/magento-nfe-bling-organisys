@@ -179,7 +179,7 @@ class Lema21_Nfe_Model_TransformToXML
 			    "cliente" => 
 				    array(
 					"nome"        => null,
-					"tipoPessoa"  => "F",
+					"tipoPessoa"  => null,
 					"email"       => null,
 					"cpf_cnpj"    => null,
 					"ie_rg"       => "",
