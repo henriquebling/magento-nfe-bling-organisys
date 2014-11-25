@@ -18,3 +18,5 @@ Melhorias no módulo:
 - Alteração na nomenclatura dos rótulos da guia Nf-e em produtos.
 - Adicionado tipo de integração e numero pedido loja.
 - Adicionado validação do tipo de pessoa.
+- Inclusão de desconto total do pedido. 
+
