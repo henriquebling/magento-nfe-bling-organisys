@@ -153,7 +153,7 @@ class Lema21_Nfe_Model_TransformToXML
 	{
 		$this->_xml["vlr_frete"]     = $this->_orderModel->getShippingAmount();;
 		$this->_xml["vlr_seguro"]    = self::SECURITY_AMOUNT;
-		$this->_xml["vlr_desconto"]  = self::DISCOUNT_DEFAULT;
+		$this->_xml["vlr_desconto"]  =  (abs($this->_orderModel->getData("discount_amount")) > 0 ? abs($this->_orderModel->getData("discount_amount")) : self::SECURITY_AMOUNT);
 		$this->_xml["tipo_integracao"]  = "api";
 		$this->_xml["numero_loja"]  = $this->_orderModel->getData("increment_id");
 		$this->_xml["obs"]           = "Nº Pedido Loja: " . $this->_orderModel->getData("increment_id");
